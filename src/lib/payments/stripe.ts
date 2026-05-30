@@ -4,7 +4,7 @@ import { PaymentGateway, PaymentIntent } from './types';
 // Initialize Stripe with a placeholder key if environment variable is missing during build
 const stripeKey = process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder';
 const stripe = new Stripe(stripeKey, {
-  apiVersion: '2025-01-27.acacia', // Updated to match latest standard apiVersion requirement
+  apiVersion: '2026-05-27.dahlia',
 });
 
 export class StripeProvider implements PaymentGateway {
