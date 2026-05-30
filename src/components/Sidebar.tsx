@@ -1,7 +1,8 @@
 import { getCategories } from "@/lib/db/categories";
-import { supabase } from "@/utils/supabase/client";
+import { createClient } from "@/utils/supabase/server";
 
 async function getBrands(): Promise<string[]> {
+  const supabase = await createClient();
   const { data, error } = await supabase
     .from('kushpa_products')
     .select('brand')
