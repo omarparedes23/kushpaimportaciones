@@ -1,7 +1,7 @@
 'use server';
 
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/require-admin';
 import type { KushpaProduct } from '@/lib/db/types';
 
 interface ProductData {
@@ -21,14 +21,8 @@ function getAdminClient() {
   );
 }
 
-async function requireAuth() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-}
-
 export async function getAdminProducts(): Promise<KushpaProduct[]> {
-  await requireAuth();
+  await requireAdmin();
   const { data, error } = await getAdminClient()
     .from('kushpa_products')
     .select('*')
@@ -38,13 +32,13 @@ export async function getAdminProducts(): Promise<KushpaProduct[]> {
 }
 
 export async function saveProduct(data: ProductData): Promise<void> {
-  await requireAuth();
+  await requireAdmin();
   const { error } = await getAdminClient().from('kushpa_products').insert(data);
   if (error) throw new Error(error.message);
 }
 
 export async function updateProduct(id: string, data: ProductData): Promise<void> {
-  await requireAuth();
+  await requireAdmin();
   const { error } = await getAdminClient()
     .from('kushpa_products')
     .update(data)
@@ -53,7 +47,7 @@ export async function updateProduct(id: string, data: ProductData): Promise<void
 }
 
 export async function deleteProduct(id: string): Promise<void> {
-  await requireAuth();
+  await requireAdmin();
   const { error } = await getAdminClient()
     .from('kushpa_products')
     .delete()

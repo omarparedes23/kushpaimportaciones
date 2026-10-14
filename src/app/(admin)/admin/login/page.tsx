@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
+import { isAdmin } from '@/lib/auth/is-admin'
 import { Button } from '@/components/ui/button'
 
 export default function AdminLoginPage() {
@@ -18,13 +19,17 @@ export default function AdminLoginPage() {
     setLoading(true)
     setError(null)
     
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
     if (error) {
       setError(error.message)
+      setLoading(false)
+    } else if (!isAdmin(data.user)) {
+      await supabase.auth.signOut()
+      setError('Esta cuenta no tiene permisos de administrador.')
       setLoading(false)
     } else {
       router.push('/admin')

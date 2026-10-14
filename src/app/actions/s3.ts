@@ -2,6 +2,7 @@
 
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { requireAdmin } from '@/lib/auth/require-admin';
 
 const s3Client = new S3Client({
   region: 'auto',
@@ -13,6 +14,7 @@ const s3Client = new S3Client({
 });
 
 export async function createPresignedUrl(fileName: string, contentType: string) {
+  await requireAdmin();
   try {
     const command = new PutObjectCommand({
       Bucket: process.env.R2_BUCKET_NAME!,
