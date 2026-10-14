@@ -24,24 +24,14 @@ export async function getAllProducts(): Promise<KushpaProduct[]> {
   return data ?? [];
 }
 
-export async function getProductsByCategory(categorySlug: string): Promise<KushpaProduct[]> {
+export async function getProductsByCategory(slug: string): Promise<KushpaProduct[]> {
   const supabase = await createClient();
-
-  // First get the category ID
-  const { data: category } = await supabase
-    .from('kushpa_categories')
-    .select('id')
-    .eq('slug', categorySlug)
-    .single();
-
-  if (!category) return [];
-
-  // Then get products in that category
+  // Category relation lives in the junction table kushpa_product_categories
   const { data, error } = await supabase
     .from('kushpa_products')
-    .select('*')
+    .select('*, kushpa_product_categories!inner(category_id, kushpa_categories!inner(slug))')
     .eq('is_active', true)
-    .eq('category_id', category.id)
+    .eq('kushpa_product_categories.kushpa_categories.slug', slug)
     .order('created_at', { ascending: false });
 
   if (error) throw error;
