@@ -11,6 +11,7 @@ export interface KushpaProduct {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  category_ids?: string[];
 }
 
 export interface KushpaCategory {

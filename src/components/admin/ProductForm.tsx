@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createPresignedUrl } from '@/app/actions/s3';
 import { saveProduct, updateProduct } from '@/app/actions/products';
+import { getAdminCategories } from '@/app/actions/categories';
 import { Button } from '@/components/ui/button';
-import type { KushpaProduct } from '@/lib/db/types';
+import type { KushpaCategory, KushpaProduct } from '@/lib/db/types';
 
 interface ProductFormProps {
   onSuccess?: () => void;
@@ -23,6 +24,15 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
   const [stock, setStock] = useState(product?.stock?.toString() ?? '');
   const [isActive, setIsActive] = useState(product?.is_active ?? true);
   const [file, setFile] = useState<File | null>(null);
+  const [categories, setCategories] = useState<KushpaCategory[]>([]);
+  const [categoryIds, setCategoryIds] = useState<string[]>(product?.category_ids ?? []);
+
+  useEffect(() => {
+    getAdminCategories().then(setCategories).catch(() => setError('No se pudieron cargar las categorías'));
+  }, []);
+
+  const toggleCategory = (id: string) =>
+    setCategoryIds(prev => (prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +64,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         stock: parseInt(stock, 10),
         is_active: isActive,
         image_url: imageUrl,
+        category_ids: categoryIds,
       };
 
       if (isEditing) {
@@ -67,6 +78,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         setStock('');
         setIsActive(true);
         setFile(null);
+        setCategoryIds([]);
       }
 
       onSuccess?.();
@@ -141,6 +153,27 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
           className="w-full border rounded px-3 py-2"
         />
       </div>
+
+      <fieldset>
+        <legend className="block text-sm font-medium mb-1">Categorías</legend>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
+          {categories.map(category => (
+            <label key={category.id} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={categoryIds.includes(category.id)}
+                onChange={() => toggleCategory(category.id)}
+              />
+              {category.name}
+            </label>
+          ))}
+        </div>
+        {categories.length > 0 && categoryIds.length === 0 && (
+          <p className="text-xs text-amber-600 mt-1">
+            Sin categoría: el producto no aparecerá en ninguna página de categoría.
+          </p>
+        )}
+      </fieldset>
 
       <div>
         <label className="block text-sm font-medium mb-1">Imagen del producto</label>
