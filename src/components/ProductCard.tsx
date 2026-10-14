@@ -1,21 +1,31 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
+import { useCart } from '@/lib/cart-context';
 
 interface ProductCardProps {
+  id: string;
+  slug: string;
   image: string;
   brand: string;
   title: string;
   regularPrice: number;
   discountPrice: number;
+  stock: number;
 }
 
-export function ProductCard({ image, brand, title, regularPrice, discountPrice }: ProductCardProps) {
+export function ProductCard({ id, slug, image, brand, title, regularPrice, discountPrice, stock }: ProductCardProps) {
   const discountPercentage = Math.round(((regularPrice - discountPrice) / regularPrice) * 100);
+  const { addItem } = useCart();
+
+  const handleAddToCart = () => {
+    addItem({ id, title, brand, image_url: image, price: discountPrice });
+  };
 
   return (
-    <div className="group relative flex flex-col bg-white rounded-2xl border border-slate-100 hover:border-brand/20 hover:shadow-xl hover:shadow-slate-200/80 transition-all duration-300 overflow-hidden cursor-pointer">
+    <div className="group relative flex flex-col bg-white rounded-2xl border border-slate-100 hover:border-brand/20 hover:shadow-xl hover:shadow-slate-200/80 transition-all duration-300 overflow-hidden">
 
       {/* Discount badge */}
       {discountPercentage > 0 && (
@@ -24,6 +34,7 @@ export function ProductCard({ image, brand, title, regularPrice, discountPrice }
         </div>
       )}
 
+      <Link href={`/productos/${slug}`} className="flex flex-col flex-1">
       {/* Image */}
       <div className="relative aspect-square w-full overflow-hidden bg-slate-50 p-4">
         <Image
@@ -56,21 +67,35 @@ export function ProductCard({ image, brand, title, regularPrice, discountPrice }
             </span>
           )}
 
-          {/* Delivery badge */}
+          {/* Stock badge */}
           <div className="mt-3 flex items-center justify-between">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              Llega mañana
-            </span>
+            {stock === 0 ? (
+              <span className="inline-flex items-center gap-1 bg-red-50 text-red-600 text-[10px] font-bold px-2 py-1 rounded-full">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-500" />
+                Agotado
+              </span>
+            ) : (
+              <span className={`inline-flex items-center gap-1 text-[10px] font-bold px-2 py-1 rounded-full ${stock <= 10 ? 'bg-orange-50 text-orange-600' : 'bg-emerald-50 text-emerald-700'}`}>
+                <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${stock <= 10 ? 'bg-orange-500' : 'bg-emerald-500'}`} />
+                Stock: {stock} ud.
+              </span>
+            )}
           </div>
         </div>
       </div>
+      </Link>
 
-      {/* Add to cart — appears on hover */}
-      <div className="absolute bottom-0 inset-x-0 bg-brand text-white text-xs font-bold py-2.5 flex items-center justify-center gap-2 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-        <ShoppingCart className="h-3.5 w-3.5" />
-        Agregar al carrito
-      </div>
+      {/* Add to cart — always visible on mobile (no hover), hover-reveal on md+ */}
+      {stock > 0 && (
+        <button
+          type="button"
+          onClick={handleAddToCart}
+          className="w-full bg-brand text-white text-xs font-bold py-2.5 flex items-center justify-center gap-2 hover:bg-brand-dark md:absolute md:bottom-0 md:inset-x-0 md:translate-y-full md:group-hover:translate-y-0 md:transition-transform md:duration-300"
+        >
+          <ShoppingCart className="h-3.5 w-3.5" />
+          Agregar al carrito
+        </button>
+      )}
     </div>
   );
 }

@@ -24,13 +24,25 @@ export async function getAllProducts(): Promise<KushpaProduct[]> {
   return data ?? [];
 }
 
-export async function getProductsByCategory(slug: string): Promise<KushpaProduct[]> {
+export async function getProductsByCategory(categorySlug: string): Promise<KushpaProduct[]> {
   const supabase = await createClient();
+
+  // First get the category ID
+  const { data: category } = await supabase
+    .from('kushpa_categories')
+    .select('id')
+    .eq('slug', categorySlug)
+    .single();
+
+  if (!category) return [];
+
+  // Then get products in that category
   const { data, error } = await supabase
     .from('kushpa_products')
-    .select('*, kushpa_product_categories!inner(category_id, kushpa_categories!inner(slug))')
+    .select('*')
     .eq('is_active', true)
-    .eq('kushpa_product_categories.kushpa_categories.slug', slug);
+    .eq('category_id', category.id)
+    .order('created_at', { ascending: false });
 
   if (error) throw error;
   return data ?? [];
@@ -46,6 +58,19 @@ export async function getProductsByBrand(brand: string): Promise<KushpaProduct[]
 
   if (error) throw error;
   return data ?? [];
+}
+
+export async function getProductBySlug(slug: string): Promise<KushpaProduct | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from('kushpa_products')
+    .select('*')
+    .eq('slug', slug)
+    .eq('is_active', true)
+    .single();
+
+  if (error) return null;
+  return data;
 }
 
 export async function searchProducts(query: string): Promise<KushpaProduct[]> {

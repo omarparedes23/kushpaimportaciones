@@ -14,6 +14,17 @@ interface ProductData {
   image_url: string;
 }
 
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+}
+
 function getAdminClient() {
   return createAdminClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -33,7 +44,10 @@ export async function getAdminProducts(): Promise<KushpaProduct[]> {
 
 export async function saveProduct(data: ProductData): Promise<void> {
   await requireAdmin();
-  const { error } = await getAdminClient().from('kushpa_products').insert(data);
+  const slug = generateSlug(data.title);
+  const { error } = await getAdminClient()
+    .from('kushpa_products')
+    .insert({ ...data, slug });
   if (error) throw new Error(error.message);
 }
 

@@ -47,11 +47,14 @@ export default async function Home() {
             {products.map((product) => (
               <ProductCard
                 key={product.id}
+                id={product.id}
+                slug={product.slug}
                 image={product.image_url}
                 brand={product.brand}
                 title={product.title}
                 regularPrice={product.regular_price}
                 discountPrice={product.discount_price ?? product.regular_price}
+                stock={product.stock}
               />
             ))}
           </div>

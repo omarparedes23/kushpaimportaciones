@@ -1,8 +1,10 @@
 export interface KushpaProduct {
   id: string;
+  slug: string;
   image_url: string;
   brand: string;
   title: string;
+  description: string | null;
   regular_price: number;
   discount_price: number | null;
   stock: number;
