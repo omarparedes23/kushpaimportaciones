@@ -107,7 +107,7 @@ export function ProductForm({ onSuccess, product }: ProductFormProps) {
         />
       </div>
 
-      <div className="flex gap-4">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <label className="block text-sm font-medium mb-1">Precio regular</label>
           <input

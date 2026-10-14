@@ -80,7 +80,7 @@ export function CategoryGrid() {
           {CATEGORIES.map(({ slug, name, icon: Icon, bg, iconColor, hoverBorder, hoverBg }) => (
             <Link
               key={slug}
-              href={`/?categoria=${slug}`}
+              href={`/categorias/${slug}`}
               className={`group flex flex-col items-center gap-3 p-5 bg-white rounded-2xl border-2 border-transparent ${hoverBorder} ${hoverBg} transition-all duration-200 hover:shadow-md cursor-pointer`}
             >
               <div className={`p-4 rounded-2xl ${bg} group-hover:scale-110 transition-transform duration-200`}>

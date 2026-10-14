@@ -18,11 +18,11 @@ function IconFacebook({ className }: { className?: string }) {
 }
 
 const CATEGORIES = [
-  { name: 'Tecnología', href: '/?categoria=tecnologia' },
-  { name: 'Hogar y Muebles', href: '/?categoria=hogar-y-muebles' },
-  { name: 'Deportes y Fitness', href: '/?categoria=deportes-y-fitness' },
-  { name: 'Juegos y Juguetes', href: '/?categoria=juegos-y-juguetes' },
-  { name: 'Belleza y Cuidado', href: '/?categoria=belleza-y-cuidado' },
+  { name: 'Tecnología', href: '/categorias/tecnologia' },
+  { name: 'Hogar y Muebles', href: '/categorias/hogar-y-muebles' },
+  { name: 'Deportes y Fitness', href: '/categorias/deportes-y-fitness' },
+  { name: 'Juegos y Juguetes', href: '/categorias/juegos-y-juguetes' },
+  { name: 'Belleza y Cuidado', href: '/categorias/belleza-y-cuidado' },
 ];
 
 const HELP_LINKS = [

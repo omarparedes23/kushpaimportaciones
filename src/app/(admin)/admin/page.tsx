@@ -45,8 +45,8 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-slate-800">Products Dashboard</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold text-slate-800">Products Dashboard</h1>
         <Button onClick={() => setActiveForm(isCreating ? null : 'create')}>
           {isCreating ? 'Cancelar' : 'Agregar producto'}
         </Button>
@@ -65,7 +65,7 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
-      <div className="bg-white rounded shadow overflow-hidden">
+      <div className="bg-white rounded shadow overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>

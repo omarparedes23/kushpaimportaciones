@@ -159,7 +159,7 @@ export function HeroBanner() {
             </div>
 
             {/* Extra floaty element: Free shipping */}
-            <div className="absolute -bottom-6 -left-6 z-20 bg-white text-slate-800 rounded-2xl p-3.5 shadow-xl border border-slate-100 hidden md:flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-default">
+            <div className="absolute -bottom-6 -left-6 z-20 bg-white text-slate-800 rounded-2xl p-3.5 shadow-xl border border-slate-100 hidden lg:flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-default">
               <div className="bg-emerald-100 text-emerald-600 p-2 rounded-xl">
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -172,7 +172,7 @@ export function HeroBanner() {
             </div>
 
             {/* Extra floaty element: Rating */}
-            <div className="absolute -top-6 -right-6 z-20 bg-brand/90 backdrop-blur-sm text-white rounded-2xl p-3 shadow-xl border border-white/10 hidden md:flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-default">
+            <div className="absolute -top-6 -right-6 z-20 bg-brand/90 backdrop-blur-sm text-white rounded-2xl p-3 shadow-xl border border-white/10 hidden lg:flex items-center gap-3 hover:scale-105 transition-transform duration-300 cursor-default">
               <div className="bg-yellow-300 text-brand-dark font-black text-xs px-2 py-1 rounded-lg">
                 ★ 4.9
               </div>
